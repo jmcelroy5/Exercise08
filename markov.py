@@ -26,21 +26,41 @@ def make_chains(corpus):
     return chains
 
 def make_text(chains):
-
     """Takes a dictionary of markov chains and returns random text
     based off an original text."""
-    for i in range(20):
 
-        value_list = chains.values()
-        rand_num = random.randrange(len(value_list)) # Generate a random number within the length of dictionary
-        if value_list[rand_num][0][0] in string.ascii_uppercase: # If the first letter of the first word is a capital letter
-            print value_list[rand_num][0]
+    # Generates first word of sentence by finding a value with capital letter
+    # value_list = chains.values()
+    # def get_first_letter(x):
+    #     if x[0][0] in string.ascii_uppercase:
+    #         return True
+    #     else:
+    #         return False
+    # capital_words_list = filter(get_first_letter, value_list)    # create value list for words that begin with capital letters
 
-        # first_word =       # randomly select a word pair that begins with capital letter
-        # for key, value
-        #     print value
+    # for i in range(20):
+    #     rand_num = random.randrange(len(capital_words_list)) # Generate a random number within the length of capital word list
+    #     first_word = capital_words_list[rand_num][0]
 
-    return "Here's some random text."
+        # print first_word + chains[first_word][0]
+
+    keys_list = chains.keys()
+    print "keys list: ", keys_list
+    
+    # for key, value in chains.iteritems():
+    seed_key = keys_list[2] #tuple with 2 strings
+
+    first_word = seed_key[0] #string
+    second_word = seed_key[1] #string
+    third_word = chains[seed_key][0] #string
+
+    next_word = chains.get((second_word,third_word),"Damn")
+
+    sentence = first_word + " " + second_word + " " + third_word + " " + next_word[0]
+
+    print sentence
+
+    # return "Here's some random text."
 
 def main():
     args = sys.argv
