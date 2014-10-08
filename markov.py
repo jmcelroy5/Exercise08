@@ -29,38 +29,32 @@ def make_text(chains):
     """Takes a dictionary of markov chains and returns random text
     based off an original text."""
 
-    # Generates first word of sentence by finding a value with capital letter
-    # value_list = chains.values()
-    # def get_first_letter(x):
-    #     if x[0][0] in string.ascii_uppercase:
-    #         return True
-    #     else:
-    #         return False
-    # capital_words_list = filter(get_first_letter, value_list)    # create value list for words that begin with capital letters
-
-    # for i in range(20):
-    #     rand_num = random.randrange(len(capital_words_list)) # Generate a random number within the length of capital word list
-    #     first_word = capital_words_list[rand_num][0]
-
-        # print first_word + chains[first_word][0]
-
     keys_list = chains.keys()
-    print "keys list: ", keys_list
+
+    # While loop tests random keys until a value with capital letter is found
+    not_found = True    
+    while not_found:
+        option = random.choice(keys_list)       # randomly selects a key from dictionary (key is a tuple)
+        if chains[option][0][0] in string.ascii_uppercase:
+            seed_key = option
+            new_word = chains[seed_key]
+            not_found = False
     
-    # for key, value in chains.iteritems():
-    seed_key = keys_list[2] #tuple with 2 strings
+    sentence = ""
 
-    first_word = seed_key[0] #string
-    second_word = seed_key[1] #string
-    third_word = chains[seed_key][0] #string
+    while "." not in new_word:
+        second_word = seed_key[1] # saving second word of key to form next tuple
 
-    next_word = chains.get((second_word,third_word),"Damn")
+        # Get new word (value of key)
+        new_word = chains[seed_key] # values list
+        # chooses value from value list if there is more than one option
+        new_word = new_word[random.randrange(len(new_word))] 
+        
+        sentence = sentence + " " + new_word 
+        
+        seed_key = (second_word, new_word)
 
-    sentence = first_word + " " + second_word + " " + third_word + " " + next_word[0]
-
-    print sentence
-
-    # return "Here's some random text."
+    return sentence
 
 def main():
     args = sys.argv
