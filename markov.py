@@ -7,33 +7,35 @@ import string
 def make_chains(corpus1,corpus2,n):
     """Takes an input text as a string and returns a dictionary of
     markov chains."""
+
     chains = {}
     n = int(n)
 
-    input_text1 = corpus1.read() # one long string
-    input_text2 = corpus2.read() # another long string
+    input_text1 = corpus1.read() 
+    input_text2 = corpus2.read() 
 
-    mashup = input_text1 + input_text2
+    mashup = input_text1 + input_text2      # Combining two source texts
 
     clean_text = mashup.replace("--"," ").replace("_"," ")      
-    word_list = clean_text.split() # store corpus in one long string
+    word_list = clean_text.split() 
 
-    #Loop through giant list and assign keys and values to empty dict
+    # Loop through word list and create groupings (of n-length) 
+
     for i in range(len(word_list)-n):
         key_tuple = []
         for j in range(n):
             key_tuple.append(word_list[i+j])
 
+        # Assign key and value to dictionary of markov chains
+        
         key = tuple(key_tuple)
         value = word_list[i+n]
         
-        #add values to multiple occurances of pair word keys
-        if key not in chains:       # If word pair is not already in dictionary
+        if key not in chains:       
             chains[key] = [value]
-        else:                       # If word pair is in dictionary (append to value list)
+        else:                       
             chains[key].append(value)
 
-    # print chains, dict of keys as strings in tuple and values as list of strings
     return chains
 
 def make_text(chains):
@@ -41,17 +43,15 @@ def make_text(chains):
     based off an original text."""
 
 
-    #assign key_list to key/tuple group
-    keys_list = chains.keys()
-
-    # Test random keys until a value with capital letter is found
-    not_found = True    
+    keys_list = chains.keys()   # list of keys (tuples of n-length)
+          
+    not_found = True    # Test random keys until a value with capital letter is found  
     while not_found:
-        option = random.choice(keys_list)       # randomly selects a key from dictionary (key is a tuple)
+        option = random.choice(keys_list)   # randomly selects a key from dictionary 
        
         if chains[option][0][0] in string.ascii_uppercase:
-            seed_key = option #tuple
-            new_word = chains[seed_key] #list
+            seed_key = option #
+            new_word = chains[seed_key] 
             not_found = False
     
     sentence = ""
@@ -59,17 +59,18 @@ def make_text(chains):
     while new_word[-1] not in ".?!":
 
         # Get new word (value of key)
-        new_word = chains[seed_key] # values list
-        # chooses value from value list if there is more than one option
+        new_word = chains[seed_key] 
+
+        # Randomly choose value from value list if there is more than one option
         new_word = new_word[random.randrange(len(new_word))] 
-        #update sentence string
+
+        # Update generated sentence with current word
         sentence = sentence + " " + new_word
 
+        # Stitch together new key using end of last key + current word
         new_key = []
-        # WHY DOESNT THIS WORK?!
         new_key = list(seed_key[1:])
         new_key.append(new_word)
-
         seed_key = tuple(new_key)
 
     return sentence
@@ -79,12 +80,13 @@ def main():
 
     script, input_file1, input_file2, n = args
 
-    # Change this to read input_text from a file
+    # Reads text from two source files
     corpus1 = open(input_file1)
     corpus2 = open(input_file2)
 
     chain_dict = make_chains(corpus1,corpus2, n)
     random_text = make_text(chain_dict)
+
     print random_text
 
 if __name__ == "__main__":
