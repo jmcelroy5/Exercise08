@@ -42,7 +42,6 @@ def make_text(chains):
     """Takes a dictionary of markov chains and returns random text
     based off an original text."""
 
-
     keys_list = chains.keys()   # list of keys (tuples of n-length)
           
     not_found = True    # Test random keys until a value with capital letter is found  
