@@ -9,10 +9,7 @@ import os
 # tapi = os.environ.get("TWITTER_API_KEY")
 # api = twitter.Api(tapi)
 
-api = twitter.Api(consumer_key='30nTXG5bmblKSuZs2mRXbbLfn',
-                       consumer_secret='6i24K0aWX8sIhlgldhgT2x5sNUGkASp3EiXYrH4uDF9aVvgwuV',
-                       access_token_key='2851058641-lF41VqJfjxwNIlU5cWwa7Ox1bZSQZR6ebyeRpZm',
-                       access_token_secret='zV1xRFv7f1W4CvTipFNxVifREJPgvABhYor63n0e5YzTa')   # Twitter access keys removed
+api = twitter.Api() # Twitter access keys removed
 
 def make_chains(corpus1,corpus2,n):
     """Takes an input text as a string and returns a dictionary of
