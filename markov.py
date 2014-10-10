@@ -1,27 +1,23 @@
-#!/usr/bin/env python
 
-import sys
+
+import os, sys
 import random
 import string
 import twitter
-import os
 
-# tapi = os.environ.get("TWITTER_API_KEY")
-# api = twitter.Api(tapi)
-
-api = twitter.Api() # Twitter access keys removed
-
-def make_chains(corpus1,corpus2,n):
-    """Takes an input text as a string and returns a dictionary of
+def make_chains(corpus1, corpus2, n):
+    """Takes two input text files and returns a dictionary of
     markov chains."""
 
     chains = {}
     n = int(n)
 
+    # Read in the two source files
     input_text1 = corpus1.read() 
     input_text2 = corpus2.read() 
 
-    mashup = input_text1 + input_text2      # Combining two source texts
+    # Combining two source texts
+    mashup = input_text1 + input_text2 
 
     clean_text = mashup.replace("--"," ").replace("_"," ").replace("[", " ").replace("]"," ").replace("/", " ").replace("\\", " ")
 
@@ -81,24 +77,35 @@ def make_text(chains):
 
     return sentence + "."
 
+def post_to_twitter(tweet):
+
+    if os.getenviron.get("TWITTER_API_KEY", None) == None:
+        print "You need twitter access keys in your shell environment to post to twitter."
+        sys.exit()
+
+    api = twitter.Api(consumer_key = os.environ.get("TWITTER_API_KEY"),
+                       consumer_secret = os.environ.get("TWITTER_CONSUMER_KEY"),
+                       access_token_key = os.environ.get("TWITTER_ACCESS_TOKEN_KEY"),
+                       access_token_secret= os.environ.get("TWITTER_ACCESS_TOKEN_SECRET"))
+
+    print tweet
+    post = raw_input("Do you want to post this to twitter? -->  y/n ")
+
+    if "y" in post:
+        return api.PostUpdate(tweet)
+
 def main():
     args = sys.argv
-
     script, input_file1, input_file2, n = args
 
-    # Reads text from two source files
+    # Takes text from two source files
     corpus1 = open(input_file1)
     corpus2 = open(input_file2)
 
-    chain_dict = make_chains(corpus1,corpus2, n)  
+    chain_dict = make_chains(corpus1, corpus2, n)  
     random_text = make_text(chain_dict)
+    post_to_twitter(random_text)
 
-    print random_text
-    post = raw_input("Do you want to post this to twitter? --> y/n   ")
     
-    if "y" in post:
-        return api.PostUpdate(random_text)
-
-
 if __name__ == "__main__":
     main()
